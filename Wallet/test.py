@@ -1,4 +1,5 @@
 import argparse
+import sqlite3
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -34,11 +35,24 @@ if __name__ == "__main__":
 
   
     def create(email, firstname, lastname):
-        return f"My email is {email} and my full name is {firstname} {lastname}" 
-    if args.function == "create":
-        result = create(args.email, args.firstname, args.lastname)
 
-    
-    print(result)
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute("""CREATE TABLE IF NOT EXISTS customers(
+        email text,
+        first_name text,
+        last_name text
+        )""")
+        c.execute("INSERT INTO customers VALUES (?,?,?)", (email, firstname, lastname))
+        c.execute("SELECT rowid, * FROM customers")
+        items = c.fetchall()
+        for item in items:
+            print(item)
+        conn.commit()
+        conn.close()
+        
+    if args.function == "create":
+        create(args.email, args.firstname, args.lastname)
+
     
 
