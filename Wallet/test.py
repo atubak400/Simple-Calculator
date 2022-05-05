@@ -28,23 +28,21 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    print(args.function)
-    print(args.email)
-    print(args.firstname)
-    print(args.lastname)
-
   
     def create(email, firstname, lastname):
 
         conn = sqlite3.connect('database.db')
         c = conn.cursor()
-        c.execute("""CREATE TABLE IF NOT EXISTS customers(
-        email text,
+        c.execute("""CREATE TABLE IF NOT EXISTS new_customers(
+        email text unique,
         first_name text,
         last_name text
         )""")
-        c.execute("INSERT INTO customers VALUES (?,?,?)", (email, firstname, lastname))
-        c.execute("SELECT rowid, * FROM customers")
+        try:
+            c.execute("INSERT INTO new_customers VALUES (?,?,?)", (email, firstname, lastname))
+        except:
+            print("Sorry email already taken!!")
+        c.execute("SELECT rowid, * FROM new_customers")
         items = c.fetchall()
         for item in items:
             print(item)

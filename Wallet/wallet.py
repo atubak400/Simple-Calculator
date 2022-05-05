@@ -29,10 +29,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    print(args.function)
-    print(args.email)
-    print(args.firstname)
-    print(args.lastname)
 
     if args.function == "create":
         functions.create(args.email, args.firstname, args.lastname)
