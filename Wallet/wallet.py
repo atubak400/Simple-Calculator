@@ -47,15 +47,17 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    try:
+        if args.function == "create":
+            functions.create(args.email, args.firstname, args.lastname)
 
-    if args.function == "create":
-        functions.create(args.email, args.firstname, args.lastname)
+        elif args.function == "deposit":
+            functions.deposit(args.email, args.amount)
 
-    elif args.function == "deposit":
-        functions.deposit(args.email, args.amount)
-
-    elif args.function == "transfer":
-        functions.transfer(args.email1, args.email2, args.amount)
+        elif args.function == "transfer":
+            functions.transfer(args.email1, args.email2, args.amount)
+    except:
+        print("Try again with a valid email address and amount")
 
     
 
