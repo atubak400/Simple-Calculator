@@ -4,7 +4,6 @@ import datetime
 now = datetime.datetime.now()
 
 def create(email, firstname, lastname):
-    created_at = now
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     c.execute("""CREATE TABLE IF NOT EXISTS customers(
@@ -16,7 +15,7 @@ def create(email, firstname, lastname):
     Updated_at timestamp
     )""")
     try:
-        c.execute("INSERT INTO customers VALUES (?,?,?,?,?,?)", (email, firstname, lastname, 0, created_at, "-"))
+        c.execute("INSERT INTO customers VALUES (?,?,?,?,?,?)", (email, firstname, lastname, 0, now, "-"))
     except:
         print(f"Sorry, {email} is already taken!!")
     c.execute("SELECT rowid, * FROM customers")
@@ -27,14 +26,13 @@ def create(email, firstname, lastname):
     conn.close()
 
 def deposit(email, amount):
-    updated_at = now
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     c.execute("SELECT * FROM customers WHERE Email = ?", (email,))
     items = c.fetchall()
     for item in items:
         new_amount = item[3] + amount
-    c.execute("UPDATE customers SET Balance = ?, Updated_at = ? WHERE Email = ?", (new_amount, updated_at,email))
+    c.execute("UPDATE customers SET Balance = ?, Updated_at = ? WHERE Email = ?", (new_amount, now, email))
     conn.commit()
     conn.close()
     print(f"Transaction successfull. You deposited {amount} Naira into your account!!")
@@ -53,7 +51,7 @@ def transfer(email1, email2, amount):
         else:
             print("Insufficient Funds. Please recharge your account and try again!!")
             break
-        c.execute("UPDATE customers SET Balance = ?, Updated_at = ? WHERE Email = ?", (new_amount1, updated_at, email1))
+        c.execute("UPDATE customers SET Balance = ?, Updated_at = ? WHERE Email = ?", (new_amount1, now, email1))
         c.execute("SELECT * FROM customers WHERE Email = ?", (email2,))
         items = c.fetchall()
         for item in items:
