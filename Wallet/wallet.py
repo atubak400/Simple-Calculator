@@ -12,7 +12,19 @@ if __name__ == "__main__":
     parser.add_argument(
         "--email",
         type=str,
-        help="Primary key for database identification"
+        help="Your email signup email address"
+        )
+
+    parser.add_argument(
+        "--email1",
+        type=str,
+        help="Your email address that will be debited for the transfer"
+        )
+
+    parser.add_argument(
+        "--email2",
+        type=str,
+        help="Email address of the Recieving Account"
         )
 
     parser.add_argument(
@@ -25,12 +37,6 @@ if __name__ == "__main__":
         "--lastname",
         type=str,
         help="fill your second name"
-        )
-
-    parser.add_argument(
-        "--user",
-        type=str,
-        help="email to receive deposit"
         )
 
     parser.add_argument(
@@ -47,6 +53,9 @@ if __name__ == "__main__":
 
     elif args.function == "deposit":
         functions.deposit(args.email, args.amount)
+
+    elif args.function == "transfer":
+        functions.transfer(args.email1, args.email2, args.amount)
 
     
 
