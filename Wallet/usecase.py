@@ -18,7 +18,6 @@ class CustomerUsecase():
         print(f"Transaction successfull. You deposited {amount} Naira into your account!!")
         print(f"Your new balance is {new_amount} Naira.")
 
-
     def transfer(self, email1, email2, amount):
         item = repository.repo.get_customer(self, email1)
         if item[3] >= amount:

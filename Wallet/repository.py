@@ -5,6 +5,7 @@ now = datetime.datetime.now()
 
 
 class repo():
+    
     def create_table(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()    
