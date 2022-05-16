@@ -5,7 +5,7 @@ now = datetime.datetime.now()
 
 
 class repo():
-    def create_table(self, email, firstname, lastname):
+    def create_table(self):
         conn = sqlite3.connect('database.db')
         c = conn.cursor()    
         c.execute("""CREATE TABLE IF NOT EXISTS customers(
@@ -16,6 +16,12 @@ class repo():
         Created_at timestamp,
         Updated_at timestamp
         )""")     
+        conn.commit()
+        conn.close()
+
+    def signup_custumer(self, email, firstname, lastname):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()    
         c.execute("INSERT INTO customers VALUES (?,?,?,?,?,?)", (email, firstname, lastname, 0, now, "-"))
         conn.commit()
         conn.close()

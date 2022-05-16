@@ -8,7 +8,8 @@ now = datetime.datetime.now()
 class CustomerUsecase():
 
     def create_wallet(self, email, firstname, lastname):        
-        repository.repo.create_table(self, email, firstname, lastname)
+        repository.repo.create_table(self)
+        repository.repo.signup_custumer(self, email, firstname, lastname)
     
     def deposit(self, email, amount):
         item = repository.repo.get_customer(self, email)
