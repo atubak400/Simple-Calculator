@@ -1,5 +1,5 @@
 import argparse
-import model
+import usecase
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -47,19 +47,16 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
 
-
-
-
 if args.function == "create":
-    customer = model.CustomerUsecase()
+    customer = usecase.CustomerUsecase()
     customer.create_wallet(args.email, args.firstname, args.lastname)
 
 if args.function == "deposit":
-    customer = model.CustomerUsecase()
+    customer = usecase.CustomerUsecase()
     customer.deposit(args.email, args.amount)
 
 if args.function == "transfer":
-    customer = model.CustomerUsecase()
+    customer = usecase.CustomerUsecase()
     customer.transfer(args.email1, args.email2, args.amount)
 
 
