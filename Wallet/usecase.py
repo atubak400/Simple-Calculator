@@ -1,34 +1,38 @@
 import datetime
-import repository
+from .repository import CustomerRepoInterface
 now = datetime.datetime.now()
 
 
 
+class CustomerUsecase:
 
-class CustomerUsecase():
+    def __init__(self, customer_repo: CustomerRepoInterface):
+        self.__customer_repo = customer_repo
 
     def create_wallet(self, email, firstname, lastname):        
-        repository.repo.create_table(self)
-        repository.repo.signup_custumer(self, email, firstname, lastname)
+        self.__customer_repo.create_table()
+        self.__customer_repo.create_customer(email, firstname, lastname)
     
     def deposit(self, email, amount):
-        item = repository.repo.get_customer(self, email)
-        new_amount = item[3] + amount
-        repository.repo.update_customer(self, new_amount, now, email)
+        customer = self.__customer_repo.get_customer(email)
+        new_amount = customer.balance + amount
+        self.__customer_repo.update_customer(email, new_amount, now)
         print(f"Transaction successfull. You deposited {amount} Naira into your account!!")
         print(f"Your new balance is {new_amount} Naira.")
+        print(customer.email, customer.first_name, customer.last_name, customer.balance, customer.created_at, customer.updated_at)
 
-    def transfer(self, email1, email2, amount):
-        item = repository.repo.get_customer(self, email1)
-        if item[3] >= amount:
-            email1_new_amount = item[3] - amount
+    def transfer(self, sender_email, receiver_email, amount):
+        sender = self.__customer_repo.get_customer(sender_email)
+        if sender.balance >= amount:
+            sender_new_balance = sender.balance - amount
         else:
             print("Insufficient Funds. Please recharge your account and try again!!")
-        repository.repo.update_customer(self, email1_new_amount, now, email1)
-        item = repository.repo.get_customer(self, email2)
-        email2_new_amount = item[3] + amount
-        repository.repo.update_customer(self, email2_new_amount , now, email2)
-        print(f"Transaction successfull. You transfered {amount} Naira into {email2}'s account!!")
-        print(f"Your new balance is {email1_new_amount} Naira.")
+        self.__customer_repo.update_customer(sender_email, sender_new_balance, now)
+        receiver = self.__customer_repo.get_customer(receiver_email)
+        receiver_new_balance = receiver.balance + amount
+        self.__customer_repo.update_customer(receiver_email, receiver_new_balance , now)
+        print(f"Transaction successfull. You transfered {amount} Naira into {receiver_email}'s account!!")
+        print(f"Your new balance is {sender_new_balance} Naira.")
+
 
 
