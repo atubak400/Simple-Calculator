@@ -1,6 +1,6 @@
 import argparse
 from Wallet.usecase import CustomerUsecase
-from Wallet.repository import CustomerRedisRepo, CustomerSqliteRepo
+from Wallet.repository import CustomerRedisRepo, CustomerSQLiteRepo
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -48,8 +48,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
 
-repo = CustomerRedisRepo()
-#repo = CustomerSqliteRepo() #switch to sqlite
+repo = CustomerRedisRepo()     #switch to redis
+#repo = CustomerSQLiteRepo()     #switch to sqlite
 customer = CustomerUsecase(customer_repo=repo) 
 
 if args.function == "create":

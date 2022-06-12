@@ -109,6 +109,42 @@ class CustomerRedisRepo(CustomerRepoInterface):
     
 
 
-class CustomerSqliteRepo(CustomerRepoInterface):
-    pass
+class CustomerSQLiteRepo(CustomerRepoInterface):
+    
+    def create_table(self):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()    
+        c.execute("""CREATE TABLE IF NOT EXISTS customers(
+        Email text unique,
+        First_name text,
+        Last_name text,
+        Created_at timestamp,
+        Updated_at timestamp,
+        Balance integer
+        )""")     
+
+    def create_customer(self, email: str, first_name: str, last_name: str) -> Customer:   
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()    
+        item = c.execute("INSERT INTO customers VALUES (?,?,?,?,?,?)", (email, first_name, last_name, now, "-", 0))
+        conn.commit()
+        conn.close()
+        return Customer(email,first_name,last_name,0,now,"-")
+       
+
+    def get_customer(self, email):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()    
+        c.execute("SELECT * FROM customers WHERE Email = ?", (email,))
+        item = c.fetchone()
+        conn.commit()
+        conn.close()
+        return Customer(item[0], item[1], item[2], item[3], item[4], item[5])
+
         
+    def update_customer(self, email, new_amount, now):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()    
+        c.execute("UPDATE customers SET Balance = ?, Updated_at = ? WHERE Email = ?", (new_amount, now, email))
+        conn.commit()
+        conn.close()
