@@ -48,8 +48,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
 
-repo = CustomerRedisRepo()     #switch to redis
-#repo = CustomerSQLiteRepo()     #switch to sqlite
+#repo = CustomerRedisRepo()     #switch to redis
+repo = CustomerSQLiteRepo()     #switch to sqlite
 customer = CustomerUsecase(customer_repo=repo) 
 
 if args.function == "create":
