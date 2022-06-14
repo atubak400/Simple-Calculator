@@ -15,7 +15,6 @@ class CustomerUsecase:
     
     def deposit(self, email, amount):
         customer = self.__customer_repo.get_customer(email)
-        print(customer.balance)
         new_amount = customer.balance + amount
         self.__customer_repo.update_customer(email, new_amount, now)
         print(f"Transaction successfull. You deposited {amount} Naira into your account!!")

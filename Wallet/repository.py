@@ -111,10 +111,12 @@ class CustomerRedisRepo(CustomerRepoInterface):
 
 class CustomerSQLiteRepo(CustomerRepoInterface):
     
+    def __init__(self):
+        self.__conn = sqlite3.connect('database.db')
+        self.__cursor = self.__conn.cursor()  
+    
     def create_table(self):
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()    
-        c.execute("""CREATE TABLE IF NOT EXISTS customers(
+        self.__cursor.execute("""CREATE TABLE IF NOT EXISTS customers(
         Email text unique,
         First_name text,
         Last_name text,
@@ -124,27 +126,22 @@ class CustomerSQLiteRepo(CustomerRepoInterface):
         )""")     
 
     def create_customer(self, email: str, first_name: str, last_name: str) -> Customer:   
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()    
-        item = c.execute("INSERT INTO customers VALUES (?,?,?,?,?,?)", (email, first_name, last_name, now, "-", 0))
-        conn.commit()
-        conn.close()
+        item = self.__cursor.execute("INSERT INTO customers VALUES (?,?,?,?,?,?)", (email, first_name, last_name, now, "-", 0))
+        self.__conn.commit()
+        self.__conn.close()
         return Customer(email,first_name,last_name,0,now,"-")
-       
 
-    def get_customer(self, email):
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()    
-        c.execute("SELECT * FROM customers WHERE Email = ?", (email,))
-        item = c.fetchone()
-        conn.commit()
-        conn.close()
+    def get_customer(self, email) -> Customer:
+        self.__cursor.execute("SELECT * FROM customers WHERE Email = ?", (email, ))
+        item = self.__cursor.fetchone()
+        self.__conn.commit()
+        #self.__conn.close()
         return Customer(item[0], item[1], item[2], item[3], item[4], item[5])
 
         
     def update_customer(self, email, new_amount, now):
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()    
-        c.execute("UPDATE customers SET Balance = ?, Updated_at = ? WHERE Email = ?", (new_amount, now, email))
-        conn.commit()
-        conn.close()
+        self.__cursor.execute("UPDATE customers SET Balance = ?, Updated_at = ? WHERE Email = ?", (new_amount, now, email))
+        self.__conn.commit()
+        #self.__conn.close()
+        #return Customer(email,first_name,last_name,0,now,new_amount)
+        # return Customer object here
